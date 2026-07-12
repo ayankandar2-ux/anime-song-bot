@@ -1,0 +1,10 @@
+name = "anime-song-delivery-bot"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+kv_namespaces = [
+  { binding = "SONGS_KV", id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID" }
+]
+
+# Set these with: wrangler secret put DELIVERY_BOT_TOKEN, etc.
+# DELIVERY_BOT_TOKEN, PUBLIC_CHANNEL_ID, PUBLIC_CHANNEL_INVITE_LINK
