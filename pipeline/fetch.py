@@ -16,8 +16,11 @@ def search_candidates():
         cmd = ["yt-dlp", "-j", "--flat-playlist", query]
         try:
             out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError as e:
+            print(f"[search] '{keyword}' failed: {e.stderr[:500]}")
             continue
+
+        print(f"[search] '{keyword}' returned {len(out.stdout.strip().splitlines())} raw lines")
 
         for line in out.stdout.strip().splitlines():
             try:
