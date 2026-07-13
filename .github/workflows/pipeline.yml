@@ -24,6 +24,10 @@ jobs:
       - name: Install Python deps
         run: pip install yt-dlp requests
 
+      - name: Write YouTube cookies file
+        working-directory: pipeline
+        run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > cookies.txt
+
       - name: Run pipeline
         working-directory: pipeline
         env:

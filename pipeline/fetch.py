@@ -4,6 +4,9 @@ import os
 
 from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD
 
+COOKIES_PATH = "cookies.txt"
+_cookie_args = ["--cookies", COOKIES_PATH] if os.path.exists(COOKIES_PATH) else []
+
 
 PLAYER_CLIENTS_TO_TRY = ["tv_embedded", "ios", "android", "web_safari"]
 
@@ -12,7 +15,7 @@ def _run_with_client_fallback(base_cmd, url, timeout):
     """Try yt-dlp with several player clients until one avoids the bot-check wall."""
     last_error = None
     for client in PLAYER_CLIENTS_TO_TRY:
-        cmd = base_cmd + ["--extractor-args", f"youtube:player_client={client}", url]
+        cmd = base_cmd + _cookie_args + ["--extractor-args", f"youtube:player_client={client}", url]
         try:
             return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=True)
         except subprocess.CalledProcessError as e:
