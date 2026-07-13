@@ -8,11 +8,11 @@ COOKIES_PATH = "cookies.txt"
 _cookie_args = ["--cookies", COOKIES_PATH] if os.path.exists(COOKIES_PATH) else []
 
 
-PLAYER_CLIENTS_TO_TRY = ["tv_embedded", "ios", "android", "web_safari"]
+PLAYER_CLIENTS_TO_TRY = ["ios", "android", "web_safari", "mweb"]
 
 
 def _run_with_client_fallback(base_cmd, url, timeout):
-    """Try yt-dlp with several player clients until one avoids the bot-check wall."""
+    """Try yt-dlp with several player clients until one works."""
     last_error = None
     for client in PLAYER_CLIENTS_TO_TRY:
         cmd = base_cmd + _cookie_args + ["--extractor-args", f"youtube:player_client={client}", url]
@@ -20,10 +20,8 @@ def _run_with_client_fallback(base_cmd, url, timeout):
             return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=True)
         except subprocess.CalledProcessError as e:
             last_error = e
-            if "Sign in to confirm" in (e.stderr or ""):
-                print(f"[client fallback] '{client}' was blocked, trying next client")
-                continue
-            raise
+            print(f"[client fallback] '{client}' failed, trying next client: {(e.stderr or '')[:200]}")
+            continue
     raise last_error
 
 
