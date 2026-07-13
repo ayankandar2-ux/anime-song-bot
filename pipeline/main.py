@@ -6,7 +6,7 @@ from config import (
 )
 from fetch import search_candidates, get_full_info, download_video, extract_audio, download_thumbnail
 from dedupe import load_posted, save_posted
-from kv import put_song_record
+from supabase_store import put_song_record
 from telegram_api import send_video, send_audio, send_photo_with_buttons
 
 MAX_NEW_POSTS_PER_RUN = 3  # keep each run light and predictable
@@ -29,7 +29,7 @@ def process_one(video_id, posted):
         caption=title, title=title, performer=artist,
     )
 
-    # Store the file_ids in Cloudflare KV so the delivery bot can find them later
+    # Store the file_ids in Supabase so the delivery bot can find them later
     put_song_record(video_id, {
         "mp3_file_id": mp3_file_id,
         "mp4_file_id": mp4_file_id,

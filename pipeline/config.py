@@ -6,10 +6,9 @@ STORAGE_CHAT_ID = os.environ["STORAGE_CHAT_ID"]             # private chat/chann
 PUBLIC_CHANNEL_ID = os.environ["PUBLIC_CHANNEL_ID"]         # your public channel, e.g. @myanimesongs
 DELIVERY_BOT_USERNAME = os.environ["DELIVERY_BOT_USERNAME"] # e.g. AnimeSongDeliveryBot (no @)
 
-# --- Cloudflare KV (so the delivery bot can look up file_ids) ---
-CF_ACCOUNT_ID = os.environ["CF_ACCOUNT_ID"]
-CF_KV_NAMESPACE_ID = os.environ["CF_KV_NAMESPACE_ID"]
-CF_API_TOKEN = os.environ["CF_API_TOKEN"]
+# --- Supabase (so the delivery bot can look up file_ids) ---
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 
 # --- Search behavior ---
 SEARCH_KEYWORDS = [
