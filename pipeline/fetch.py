@@ -6,6 +6,9 @@ import os
 from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD, MAX_UPLOAD_AGE_HOURS
 
 
+EXTRACTOR_ARGS = ["--extractor-args", "youtube:player_client=android,web"]
+
+
 def search_candidates():
     """Search YouTube for recent anime song videos, return list of dicts."""
     candidates = []
@@ -13,7 +16,7 @@ def search_candidates():
 
     for keyword in SEARCH_KEYWORDS:
         query = f"ytsearch{RESULTS_PER_KEYWORD}:{keyword}"
-        cmd = ["yt-dlp", "-j", "--flat-playlist", query]
+        cmd = ["yt-dlp", "-j", "--flat-playlist"] + EXTRACTOR_ARGS + [query]
         try:
             out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
         except subprocess.CalledProcessError as e:
@@ -33,13 +36,23 @@ def search_candidates():
                 "url": f"https://www.youtube.com/watch?v={info.get('id')}",
             })
 
-    return candidates
+    seen = set()
+    unique_candidates = []
+    for c in candidates:
+        if c["id"] and c["id"] not in seen:
+            seen.add(c["id"])
+            unique_candidates.append(c)
+    return unique_candidates
 
 
 def get_full_info(video_id):
     """Fetch full metadata (upload date, thumbnail, uploader) for a specific video."""
-    cmd = ["yt-dlp", "-j", f"https://www.youtube.com/watch?v={video_id}"]
-    out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
+    cmd = ["yt-dlp", "-j"] + EXTRACTOR_ARGS + [f"https://www.youtube.com/watch?v={video_id}"]
+    try:
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"[info] {video_id} failed: {e.stderr[:500]}")
+        raise
     return json.loads(out.stdout)
 
 
@@ -50,8 +63,7 @@ def download_video(video_id, out_dir="downloads"):
         "yt-dlp",
         "-f", "best[ext=mp4][filesize<48M]/best[ext=mp4]",
         "-o", out_path,
-        f"https://www.youtube.com/watch?v={video_id}",
-    ]
+    ] + EXTRACTOR_ARGS + [f"https://www.youtube.com/watch?v={video_id}"]
     subprocess.run(cmd, check=True, timeout=300)
     return out_path
 
