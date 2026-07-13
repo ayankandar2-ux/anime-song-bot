@@ -1,26 +1,40 @@
 import subprocess
 import json
-import time
 import os
 
-from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD, MAX_UPLOAD_AGE_HOURS
+from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD
 
 
-EXTRACTOR_ARGS = ["--extractor-args", "youtube:player_client=android,web"]
+PLAYER_CLIENTS_TO_TRY = ["tv_embedded", "ios", "android", "web_safari"]
+
+
+def _run_with_client_fallback(base_cmd, url, timeout):
+    """Try yt-dlp with several player clients until one avoids the bot-check wall."""
+    last_error = None
+    for client in PLAYER_CLIENTS_TO_TRY:
+        cmd = base_cmd + ["--extractor-args", f"youtube:player_client={client}", url]
+        try:
+            return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=True)
+        except subprocess.CalledProcessError as e:
+            last_error = e
+            if "Sign in to confirm" in (e.stderr or ""):
+                print(f"[client fallback] '{client}' was blocked, trying next client")
+                continue
+            raise
+    raise last_error
 
 
 def search_candidates():
-    """Search YouTube for recent anime song videos, return list of dicts."""
+    """Search YouTube for anime song videos, return list of dicts (deduped)."""
     candidates = []
-    cutoff = time.time() - MAX_UPLOAD_AGE_HOURS * 3600
 
     for keyword in SEARCH_KEYWORDS:
         query = f"ytsearch{RESULTS_PER_KEYWORD}:{keyword}"
-        cmd = ["yt-dlp", "-j", "--flat-playlist"] + EXTRACTOR_ARGS + [query]
+        base_cmd = ["yt-dlp", "-j", "--flat-playlist"]
         try:
-            out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
+            out = _run_with_client_fallback(base_cmd, query, timeout=60)
         except subprocess.CalledProcessError as e:
-            print(f"[search] '{keyword}' failed: {e.stderr[:500]}")
+            print(f"[search] '{keyword}' failed: {(e.stderr or '')[:500]}")
             continue
 
         print(f"[search] '{keyword}' returned {len(out.stdout.strip().splitlines())} raw lines")
@@ -47,11 +61,12 @@ def search_candidates():
 
 def get_full_info(video_id):
     """Fetch full metadata (upload date, thumbnail, uploader) for a specific video."""
-    cmd = ["yt-dlp", "-j"] + EXTRACTOR_ARGS + [f"https://www.youtube.com/watch?v={video_id}"]
+    url = f"https://www.youtube.com/watch?v={video_id}"
+    base_cmd = ["yt-dlp", "-j"]
     try:
-        out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
+        out = _run_with_client_fallback(base_cmd, url, timeout=60)
     except subprocess.CalledProcessError as e:
-        print(f"[info] {video_id} failed: {e.stderr[:500]}")
+        print(f"[info] {video_id} failed: {(e.stderr or '')[:500]}")
         raise
     return json.loads(out.stdout)
 
@@ -59,12 +74,9 @@ def get_full_info(video_id):
 def download_video(video_id, out_dir="downloads"):
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, f"{video_id}.mp4")
-    cmd = [
-        "yt-dlp",
-        "-f", "best[ext=mp4][filesize<48M]/best[ext=mp4]",
-        "-o", out_path,
-    ] + EXTRACTOR_ARGS + [f"https://www.youtube.com/watch?v={video_id}"]
-    subprocess.run(cmd, check=True, timeout=300)
+    url = f"https://www.youtube.com/watch?v={video_id}"
+    base_cmd = ["yt-dlp", "-f", "best[ext=mp4][filesize<48M]/best[ext=mp4]", "-o", out_path]
+    _run_with_client_fallback(base_cmd, url, timeout=300)
     return out_path
 
 
