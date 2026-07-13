@@ -1,5 +1,6 @@
 import os
 import shutil
+from datetime import datetime
 
 from config import (
     PIPELINE_BOT_TOKEN, STORAGE_CHAT_ID, PUBLIC_CHANNEL_ID, DELIVERY_BOT_USERNAME,
@@ -17,6 +18,14 @@ def process_one(video_id, posted):
     title = info.get("title", "Unknown Title")
     artist = info.get("uploader", "Unknown Artist")
     thumbnail_url = info.get("thumbnail")
+
+    upload_date = info.get("upload_date")  # format: YYYYMMDD
+    if upload_date:
+        uploaded_at = datetime.strptime(upload_date, "%Y%m%d")
+        age_hours = (datetime.utcnow() - uploaded_at).total_seconds() / 3600
+        if age_hours > MAX_UPLOAD_AGE_HOURS:
+            print(f"[skip] {video_id} is {int(age_hours)}h old, over the {MAX_UPLOAD_AGE_HOURS}h limit")
+            return
 
     video_path = download_video(video_id)
     audio_path = extract_audio(video_path)

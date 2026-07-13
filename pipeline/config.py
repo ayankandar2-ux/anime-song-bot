@@ -18,6 +18,6 @@ SEARCH_KEYWORDS = [
     "anime ED full",
 ]
 RESULTS_PER_KEYWORD = 5
-MAX_UPLOAD_AGE_HOURS = 48  # only consider videos uploaded within this window
+MAX_UPLOAD_AGE_HOURS = 720  # 30 days - regular search returns relevance-ranked results, not strictly newest
 
 POSTED_LOG = "posted.json"

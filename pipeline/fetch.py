@@ -12,7 +12,7 @@ def search_candidates():
     cutoff = time.time() - MAX_UPLOAD_AGE_HOURS * 3600
 
     for keyword in SEARCH_KEYWORDS:
-        query = f"ytsearchdate{RESULTS_PER_KEYWORD}:{keyword}"
+        query = f"ytsearch{RESULTS_PER_KEYWORD}:{keyword}"
         cmd = ["yt-dlp", "-j", "--flat-playlist", query]
         try:
             out = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=True)
