@@ -48,7 +48,10 @@ def process_one(video_id, posted):
     })
 
     # Post the public preview with download buttons that deep-link to the delivery bot
-    caption = f"<b>{title}</b>\n🎤 {artist}"
+    import html
+    safe_title = html.escape(title)
+    safe_artist = html.escape(artist)
+    caption = f"<b>{safe_title}</b>\n🎤 {safe_artist}"
     buttons = [
         {"text": "⬇️ Download MP3", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp3"},
         {"text": "⬇️ Download MP4", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp4"},

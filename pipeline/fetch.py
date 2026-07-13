@@ -76,8 +76,17 @@ def download_video(video_id, out_dir="downloads"):
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, f"{video_id}.mp4")
     url = f"https://www.youtube.com/watch?v={video_id}"
-    base_cmd = ["yt-dlp", "-f", "best[ext=mp4][filesize<48M]/best[ext=mp4]", "-o", out_path]
+    base_cmd = [
+        "yt-dlp",
+        "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+        "--merge-output-format", "mp4",
+        "-o", out_path,
+    ]
     _run_with_client_fallback(base_cmd, url, timeout=300)
+
+    if os.path.exists(out_path) and os.path.getsize(out_path) > 49 * 1024 * 1024:
+        raise RuntimeError(f"Downloaded file for {video_id} exceeds Telegram's 50MB bot upload limit")
+
     return out_path
 
 
