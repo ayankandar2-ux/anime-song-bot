@@ -4,6 +4,7 @@ from datetime import datetime
 
 from config import (
     PIPELINE_BOT_TOKEN, STORAGE_CHAT_ID, PUBLIC_CHANNEL_ID, DELIVERY_BOT_USERNAME,
+    MAX_UPLOAD_AGE_HOURS,
 )
 from fetch import search_candidates, get_full_info, download_video, extract_audio, download_thumbnail
 from dedupe import load_posted, save_posted
