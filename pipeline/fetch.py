@@ -15,7 +15,11 @@ def _run_with_client_fallback(base_cmd, url, timeout):
     """Try yt-dlp with several player clients until one works."""
     last_error = None
     for client in PLAYER_CLIENTS_TO_TRY:
-        cmd = base_cmd + _cookie_args + ["--extractor-args", f"youtube:player_client={client}", url]
+        cmd = base_cmd + _cookie_args + [
+            "--remote-components", "ejs:github",
+            "--extractor-args", f"youtube:player_client={client}",
+            url,
+        ]
         try:
             return subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=True)
         except subprocess.CalledProcessError as e:
