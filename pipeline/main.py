@@ -14,11 +14,25 @@ from telegram_api import send_video, send_audio, send_photo_with_buttons
 MAX_NEW_POSTS_PER_RUN = 3  # keep each run light and predictable
 
 
+BLOCKED_TITLE_KEYWORDS = [
+    "reaction", "reacts", "react to", "reacting",
+    "review", "analysis", "explained", "breakdown",
+    "cover by", "amv", "tier list", "ranking",
+    "top 10", "top 20", "top 30", "top 50", "countdown", "best of",
+]
+
+
 def process_one(video_id, posted):
     info = get_full_info(video_id)
     title = info.get("title", "Unknown Title")
     artist = info.get("uploader", "Unknown Artist")
     thumbnail_url = info.get("thumbnail")
+
+    title_lower = title.lower()
+    if any(bad in title_lower for bad in BLOCKED_TITLE_KEYWORDS):
+        print(f"[skip] {video_id} title looks like reaction/review content: {title}")
+        posted[video_id] = {"skipped": "reaction_or_review"}
+        return False
 
     upload_date = info.get("upload_date")  # format: YYYYMMDD
     if upload_date:
