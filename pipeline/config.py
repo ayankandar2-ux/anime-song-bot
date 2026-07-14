@@ -16,8 +16,14 @@ SEARCH_KEYWORDS = [
     "anime ending 2026",
     "anime OP full",
     "anime ED full",
+    "anime opening 2025",
+    "anime ending 2025",
+    "new anime opening song",
+    "new anime ending song",
+    "anime OP full lyrics",
+    "anime ED full lyrics",
 ]
-RESULTS_PER_KEYWORD = 5
+RESULTS_PER_KEYWORD = 8
 MAX_UPLOAD_AGE_HOURS = 720  # 30 days - regular search returns relevance-ranked results, not strictly newest
 
 POSTED_LOG = "posted.json"
