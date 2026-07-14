@@ -26,7 +26,8 @@ def process_one(video_id, posted):
         age_hours = (datetime.utcnow() - uploaded_at).total_seconds() / 3600
         if age_hours > MAX_UPLOAD_AGE_HOURS:
             print(f"[skip] {video_id} is {int(age_hours)}h old, over the {MAX_UPLOAD_AGE_HOURS}h limit")
-            return
+            posted[video_id] = {"skipped": "too_old"}  # don't keep re-checking this one every run
+            return False
 
     video_path = download_video(video_id)
     audio_path = extract_audio(video_path)
@@ -68,6 +69,8 @@ def process_one(video_id, posted):
         if p and os.path.exists(p):
             os.remove(p)
 
+    return True
+
 
 def main():
     posted = load_posted()
@@ -81,8 +84,9 @@ def main():
         if not vid or vid in posted:
             continue
         try:
-            process_one(vid, posted)
-            new_count += 1
+            was_posted = process_one(vid, posted)
+            if was_posted:
+                new_count += 1
         except Exception as e:
             print(f"Skipping {vid} due to error: {e}")
 
