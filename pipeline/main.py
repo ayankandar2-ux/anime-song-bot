@@ -32,17 +32,19 @@ def process_one(video_id, posted):
     audio_path = extract_audio(video_path)
     thumb_path = download_thumbnail(thumbnail_url, video_id) if thumbnail_url else None
 
-    # Upload originals to the private storage chat to obtain reusable file_ids
-    mp4_file_id = send_video(PIPELINE_BOT_TOKEN, STORAGE_CHAT_ID, video_path, caption=title)
-    mp3_file_id = send_audio(
+    # Upload originals to the private storage chat; capture message_id (works cross-bot via copyMessage)
+    mp4_file_id, mp4_message_id = send_video(PIPELINE_BOT_TOKEN, STORAGE_CHAT_ID, video_path, caption=title)
+    mp3_file_id, mp3_message_id = send_audio(
         PIPELINE_BOT_TOKEN, STORAGE_CHAT_ID, audio_path,
         caption=title, title=title, performer=artist,
     )
 
-    # Store the file_ids in Supabase so the delivery bot can find them later
+    # Store in Supabase so the delivery bot can find them later
     put_song_record(video_id, {
         "mp3_file_id": mp3_file_id,
         "mp4_file_id": mp4_file_id,
+        "mp3_message_id": mp3_message_id,
+        "mp4_message_id": mp4_message_id,
         "title": title,
         "artist": artist,
     })

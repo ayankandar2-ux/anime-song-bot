@@ -20,7 +20,7 @@ def send_video(token, chat_id, file_path, caption=None):
             data={"chat_id": chat_id, "caption": caption or ""},
             files={"video": f},
         )
-    return result["video"]["file_id"]
+    return result["video"]["file_id"], result["message_id"]
 
 
 def send_audio(token, chat_id, file_path, caption=None, title=None, performer=None):
@@ -31,7 +31,7 @@ def send_audio(token, chat_id, file_path, caption=None, title=None, performer=No
         if performer:
             data["performer"] = performer
         result = _call(token, "sendAudio", data=data, files={"audio": f})
-    return result["audio"]["file_id"]
+    return result["audio"]["file_id"], result["message_id"]
 
 
 def send_photo_with_buttons(token, chat_id, photo_path, caption, buttons):
