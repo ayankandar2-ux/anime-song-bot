@@ -32,6 +32,6 @@ SEARCH_KEYWORDS = [
     "anime ED full lyrics",
 ]
 RESULTS_PER_KEYWORD = 8
-MAX_UPLOAD_AGE_HOURS = 720  # 30 days - regular search returns relevance-ranked results, not strictly newest
+MAX_UPLOAD_AGE_HOURS = 87600  # ~10 years - sources are curated official channels now, so freshness matters less than having real content; dedup still prevents repeats
 
 POSTED_LOG = "posted.json"
