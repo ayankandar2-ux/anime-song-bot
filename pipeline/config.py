@@ -12,9 +12,8 @@ SUPABASE_KEY = os.environ["SUPABASE_KEY"]
 
 # --- Search behavior ---
 OFFICIAL_CHANNELS = [
-    "https://www.youtube.com/@aniplex/videos",
-    "https://www.youtube.com/@PONYCANYON_anime/videos",
     "https://www.youtube.com/c/LantisGlobalChannel/videos",
+    "https://www.youtube.com/@PONYCANYON_anime/videos",
 ]
 RESULTS_PER_CHANNEL = 6
 
