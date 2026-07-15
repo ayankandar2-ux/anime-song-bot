@@ -14,6 +14,17 @@ from telegram_api import send_video, send_audio, send_photo_with_buttons
 MAX_NEW_POSTS_PER_RUN = 3  # keep each run light and predictable
 
 
+def translate_to_english(text):
+    """Best-effort translation; falls back to the original text if translation fails."""
+    try:
+        from deep_translator import GoogleTranslator
+        translated = GoogleTranslator(source="auto", target="en").translate(text)
+        return translated or text
+    except Exception as e:
+        print(f"[translate] failed, using original title: {e}")
+        return text
+
+
 BLOCKED_TITLE_KEYWORDS = [
     "reaction", "reacts", "react to", "reacting",
     "review", "analysis", "explained", "breakdown",
@@ -66,9 +77,20 @@ def process_one(video_id, posted):
 
     # Post the public preview with download buttons that deep-link to the delivery bot
     import html
-    safe_title = html.escape(title)
+    english_title = translate_to_english(title)
+    safe_title_en = html.escape(english_title)
+    safe_title_orig = html.escape(title)
     safe_artist = html.escape(artist)
-    caption = f"<b>{safe_title}</b>\n🎤 {safe_artist}"
+
+    like_count = info.get("like_count")
+    rating_line = f"👍 {like_count:,} likes" if like_count else "👍 rating unavailable"
+
+    caption = (
+        f"<b>{safe_title_en}</b>\n"
+        f"<i>{safe_title_orig}</i>\n"
+        f"{rating_line}\n"
+        f"🎤 {safe_artist}"
+    )
     buttons = [
         {"text": "⬇️ Download MP3", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp3"},
         {"text": "⬇️ Download MP4", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp4"},
