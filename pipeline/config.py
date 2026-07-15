@@ -16,7 +16,6 @@ OFFICIAL_CHANNELS = [
     "https://www.youtube.com/@PONYCANYON_anime/videos",
     "https://www.youtube.com/@flyingDOGch/videos",
     "https://www.youtube.com/c/SACRABEATS/videos",
-    "https://www.youtube.com/kingrecords/videos",
 ]
 RESULTS_PER_CHANNEL = 6
 
