@@ -19,18 +19,7 @@ OFFICIAL_CHANNELS = [
 ]
 RESULTS_PER_CHANNEL = 6
 
-SEARCH_KEYWORDS = [
-    "anime opening 2026",
-    "anime ending 2026",
-    "anime OP full",
-    "anime ED full",
-    "anime opening 2025",
-    "anime ending 2025",
-    "new anime opening song",
-    "new anime ending song",
-    "anime OP full lyrics",
-    "anime ED full lyrics",
-]
+SEARCH_KEYWORDS = []  # disabled: generic search kept pulling in fan compilations/lyric videos from non-official uploaders
 RESULTS_PER_KEYWORD = 8
 MAX_UPLOAD_AGE_HOURS = 87600  # ~10 years - sources are curated official channels now, so freshness matters less than having real content; dedup still prevents repeats
 
