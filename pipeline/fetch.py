@@ -2,7 +2,7 @@ import subprocess
 import json
 import os
 
-from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD
+from config import SEARCH_KEYWORDS, RESULTS_PER_KEYWORD, OFFICIAL_CHANNELS, RESULTS_PER_CHANNEL
 
 COOKIES_PATH = "cookies.txt"
 _cookie_args = ["--cookies", COOKIES_PATH] if os.path.exists(COOKIES_PATH) else []
@@ -29,9 +29,35 @@ def _run_with_client_fallback(base_cmd, url, timeout):
     raise last_error
 
 
-def search_candidates():
-    """Search YouTube for anime song videos, return list of dicts (deduped)."""
+def search_official_channels():
+    """Pull recent uploads directly from official anime music label channels."""
     candidates = []
+    for channel_url in OFFICIAL_CHANNELS:
+        base_cmd = ["yt-dlp", "-j", "--flat-playlist", "--playlist-end", str(RESULTS_PER_CHANNEL)]
+        try:
+            out = _run_with_client_fallback(base_cmd, channel_url, timeout=60)
+        except subprocess.CalledProcessError as e:
+            print(f"[channel] '{channel_url}' failed: {(e.stderr or '')[:500]}")
+            continue
+
+        print(f"[channel] '{channel_url}' returned {len(out.stdout.strip().splitlines())} raw lines")
+
+        for line in out.stdout.strip().splitlines():
+            try:
+                info = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            candidates.append({
+                "id": info.get("id"),
+                "title": info.get("title"),
+                "url": f"https://www.youtube.com/watch?v={info.get('id')}",
+            })
+    return candidates
+
+
+def search_candidates():
+    """Search official channels first, then general keywords, return deduped candidates."""
+    candidates = search_official_channels()
 
     for keyword in SEARCH_KEYWORDS:
         query = f"ytsearch{RESULTS_PER_KEYWORD}:{keyword}"
