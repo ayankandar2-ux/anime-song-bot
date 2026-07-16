@@ -102,6 +102,7 @@ def process_one(video_id, posted):
     if thumb_path:
         try:
             banner_path = make_banner_thumbnail(thumb_path, english_title, artist)
+            print(f"[banner] created successfully: {banner_path}")
         except Exception as e:
             print(f"[banner] failed, using plain thumbnail: {e}")
             banner_path = thumb_path

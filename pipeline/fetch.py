@@ -44,10 +44,18 @@ def search_official_channels():
 
         song_indicators = [
             "mv", "music video", "op", "ed", "主題歌", "テーマ", "ost",
-            "opening", "ending", "official audio", "audio", "pv",
+            "opening", "ending", "official audio", "official video", "pv",
             "オープニング", "エンディング", "ノンクレジット",
         ]
-        skip_indicators = ["予告", "trailer", "picture drama", "episode", "本編"]
+        # Require an actual anime tie-in signal so we don't pull in a label's
+        # general artist content (concerts, non-anime releases, etc.)
+        anime_indicators = [
+            "アニメ", "anime", "tvアニメ", "劇場版", "「", "『",
+        ]
+        skip_indicators = [
+            "予告", "trailer", "picture drama", "episode", "本編",
+            "live", "budokan", "concert", "blu-ray", "bd特典", "tour", "武道館",
+        ]
 
         for line in out.stdout.strip().splitlines():
             try:
@@ -57,6 +65,8 @@ def search_official_channels():
             title = info.get("title", "")
             title_lower = title.lower()
             if not any(s in title_lower for s in song_indicators):
+                continue
+            if not any(s in title_lower for s in anime_indicators):
                 continue
             if any(s in title_lower for s in skip_indicators):
                 continue
