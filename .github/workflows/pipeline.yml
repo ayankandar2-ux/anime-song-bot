@@ -27,7 +27,8 @@ jobs:
           echo "$HOME/.deno/bin" >> "$GITHUB_PATH"
 
       - name: Install Python deps
-        run: pip install yt-dlp requests
+        working-directory: pipeline
+        run: pip install -r requirements.txt
 
       - name: Write YouTube cookies file
         working-directory: pipeline
