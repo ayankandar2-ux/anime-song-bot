@@ -7,6 +7,7 @@ from config import (
     MAX_UPLOAD_AGE_HOURS,
 )
 from fetch import search_candidates, get_full_info, download_video, extract_audio, download_thumbnail
+from thumbnail_overlay import make_banner_thumbnail
 from dedupe import load_posted, save_posted
 from supabase_store import put_song_record
 from telegram_api import send_video, send_audio, send_photo_with_buttons
@@ -88,20 +89,30 @@ def process_one(video_id, posted):
     caption = (
         f"<b>{safe_title_en}</b>\n"
         f"<i>{safe_title_orig}</i>\n"
+        f"━━━━━━━━━━━━\n"
         f"{rating_line}\n"
-        f"🎤 {safe_artist}"
+        f"🎤 <b>{safe_artist}</b>"
     )
     buttons = [
-        {"text": "⬇️ Download MP3", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp3"},
-        {"text": "⬇️ Download MP4", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp4"},
+        {"text": "• Download MP3 •", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp3"},
+        {"text": "• Download MP4 •", "url": f"https://t.me/{DELIVERY_BOT_USERNAME}?start={video_id}_mp4"},
     ]
+
+    banner_path = None
     if thumb_path:
-        send_photo_with_buttons(PIPELINE_BOT_TOKEN, PUBLIC_CHANNEL_ID, thumb_path, caption, buttons)
+        try:
+            banner_path = make_banner_thumbnail(thumb_path, english_title, artist)
+        except Exception as e:
+            print(f"[banner] failed, using plain thumbnail: {e}")
+            banner_path = thumb_path
+
+    if banner_path:
+        send_photo_with_buttons(PIPELINE_BOT_TOKEN, PUBLIC_CHANNEL_ID, banner_path, caption, buttons)
 
     posted[video_id] = {"title": title, "artist": artist}
 
     # Cleanup local files
-    for p in (video_path, audio_path, thumb_path):
+    for p in (video_path, audio_path, thumb_path, banner_path if banner_path != thumb_path else None):
         if p and os.path.exists(p):
             os.remove(p)
 
