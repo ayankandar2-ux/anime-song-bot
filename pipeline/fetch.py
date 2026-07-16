@@ -42,8 +42,12 @@ def search_official_channels():
 
         print(f"[channel] '{channel_url}' returned {len(out.stdout.strip().splitlines())} raw lines")
 
-        song_indicators = ["mv", "music video", "op", "ed", "主題歌", "テーマ", "ost", "opening", "ending"]
-        skip_indicators = ["予告", "trailer", "drama", "episode", "pv"]
+        song_indicators = [
+            "mv", "music video", "op", "ed", "主題歌", "テーマ", "ost",
+            "opening", "ending", "official audio", "audio", "pv",
+            "オープニング", "エンディング", "ノンクレジット",
+        ]
+        skip_indicators = ["予告", "trailer", "picture drama", "episode", "本編"]
 
         for line in out.stdout.strip().splitlines():
             try:
