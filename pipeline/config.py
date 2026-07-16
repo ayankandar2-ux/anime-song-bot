@@ -17,7 +17,7 @@ OFFICIAL_CHANNELS = [
     "https://www.youtube.com/@flyingDOGch/videos",
     "https://www.youtube.com/c/SACRABEATS/videos",
 ]
-RESULTS_PER_CHANNEL = 6
+RESULTS_PER_CHANNEL = 40
 
 SEARCH_KEYWORDS = []  # disabled: generic search kept pulling in fan compilations/lyric videos from non-official uploaders
 RESULTS_PER_KEYWORD = 8
