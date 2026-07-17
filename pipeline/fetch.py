@@ -47,11 +47,10 @@ def search_official_channels():
             "opening", "ending", "official audio", "official video", "pv",
             "オープニング", "エンディング", "ノンクレジット",
         ]
-        # Require an actual anime tie-in signal so we don't pull in a label's
-        # general artist content (concerts, non-anime releases, etc.)
-        anime_indicators = [
-            "アニメ", "anime", "tvアニメ", "劇場版", "「", "『",
-        ]
+        # These channels are anime-specific music labels already, so we don't require
+        # an explicit "anime" keyword in the title - that wrongly rejected legitimate
+        # OSTs (e.g. Ghost in the Shell tracks) that don't spell it out. Instead, just
+        # exclude concert/live footage, which was the actual problem reported.
         skip_indicators = [
             "予告", "trailer", "picture drama", "episode", "本編",
             "live", "budokan", "concert", "blu-ray", "bd特典", "tour", "武道館",
@@ -65,8 +64,6 @@ def search_official_channels():
             title = info.get("title", "")
             title_lower = title.lower()
             if not any(s in title_lower for s in song_indicators):
-                continue
-            if not any(s in title_lower for s in anime_indicators):
                 continue
             if any(s in title_lower for s in skip_indicators):
                 continue
