@@ -100,6 +100,11 @@ def main():
     candidates = search_candidates()
     print(f"Found {len(candidates)} candidate(s) from AnimeThemes.moe")
 
+    posted_song_keys = {
+        f"{v.get('title','').lower()}|{v.get('artist','').lower()}"
+        for v in posted.values() if isinstance(v, dict)
+    }
+
     new_count = 0
     for c in candidates:
         if new_count >= MAX_NEW_POSTS_PER_RUN:
@@ -107,10 +112,16 @@ def main():
         song_id = c["id"]
         if song_id in posted:
             continue
+        song_key = f"{c['title'].lower()}|{c['artist'].lower()}"
+        if song_key in posted_song_keys:
+            print(f"[skip] {song_id} is the same song/artist as an already-posted entry: {c['title']}")
+            posted[song_id] = {"skipped": "duplicate_song"}
+            continue
         try:
             was_posted = process_one(c, posted)
             if was_posted:
                 new_count += 1
+                posted_song_keys.add(song_key)
         except Exception as e:
             print(f"Skipping {song_id} due to error: {e}")
 
