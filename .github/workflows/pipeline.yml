@@ -21,18 +21,9 @@ jobs:
       - name: Install ffmpeg and fonts
         run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
 
-      - name: Install Deno (needed by yt-dlp for YouTube signature solving)
-        run: |
-          curl -fsSL https://deno.land/install.sh | sh
-          echo "$HOME/.deno/bin" >> "$GITHUB_PATH"
-
       - name: Install Python deps
         working-directory: pipeline
         run: pip install -r requirements.txt
-
-      - name: Write YouTube cookies file
-        working-directory: pipeline
-        run: echo "${{ secrets.YT_COOKIES_B64 }}" | base64 -d > cookies.txt
 
       - name: Run pipeline
         working-directory: pipeline
