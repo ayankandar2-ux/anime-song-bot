@@ -30,20 +30,31 @@ def search_candidates():
         artist_name = artists[0]["name"] if artists else (anime.get("name", "Unknown Artist"))
         song_title = song.get("title") or f"{theme.get('type', '')}{theme.get('sequence') or ''}"
 
+        # A theme can have many video variants (different quality/cuts) - take only the
+        # first clean match so the same song doesn't get posted repeatedly under different IDs
+        chosen_video = None
         for entry in (theme.get("animethemeentries") or []):
             for video in (entry.get("videos") or []):
                 if not video.get("nc"):  # skip versions with credits overlay; prefer clean
                     continue
                 if video.get("lyrics"):  # skip versions with lyrics burned into the video
                     continue
-                candidates.append({
-                    "id": f"at{video['id']}",  # namespaced so it can't collide with old YouTube ids
-                    "video_link": video["link"],
-                    "anime_name": anime.get("name", "Unknown Anime"),
-                    "title": song_title,
-                    "artist": artist_name,
-                    "theme_type": theme.get("type"),  # "OP" or "ED"
-                })
+                chosen_video = video
+                break
+            if chosen_video:
+                break
+
+        if not chosen_video:
+            continue
+
+        candidates.append({
+            "id": f"at{theme['id']}",  # keyed on the theme itself, not the video variant
+            "video_link": chosen_video["link"],
+            "anime_name": anime.get("name", "Unknown Anime"),
+            "title": song_title,
+            "artist": artist_name,
+            "theme_type": theme.get("type"),  # "OP" or "ED"
+        })
     return candidates
 
 
