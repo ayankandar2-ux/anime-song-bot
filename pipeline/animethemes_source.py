@@ -1,22 +1,27 @@
 import os
+import random
 import subprocess
 import requests
 
 ANIMETHEMES_API_BASE = "https://api.animethemes.moe"
 PAGE_SIZE = 20
+MAX_PAGE_ESTIMATE = 700  # the catalog has thousands of themes; pick a random slice each run
 
 
 def search_candidates():
     """
     Query AnimeThemes.moe for confirmed anime OP/ED themes with clean (creditless)
     video links. Every result here is a database-verified anime song - no guessing
-    from video titles needed.
+    from video titles needed. Pulls a random page each run so we don't keep hitting
+    the same static "newest in database" slice, which doesn't change often.
     """
+    page = random.randint(1, MAX_PAGE_ESTIMATE)
     url = f"{ANIMETHEMES_API_BASE}/animetheme"
     params = {
         "include": "anime,song.artists,animethemeentries.videos",
-        "sort": "-id",  # most recently added to the database first
+        "sort": "id",
         "page[size]": PAGE_SIZE,
+        "page[number]": page,
     }
     resp = requests.get(url, params=params, timeout=30)
     resp.raise_for_status()
