@@ -4,21 +4,25 @@ import subprocess
 import requests
 
 ANIMETHEMES_API_BASE = "https://api.animethemes.moe"
-PAGE_SIZE = 20
-MAX_PAGE_ESTIMATE = 700  # the catalog has thousands of themes; pick a random slice each run
+PAGE_SIZE = 10  # anime, each with multiple themes nested inside
+MAX_PAGE_ESTIMATE = 150  # rough estimate of pages covering 2020+ anime
+MIN_YEAR = 2020
+CURRENT_YEAR = 2026
 
 
 def search_candidates():
     """
     Query AnimeThemes.moe for confirmed anime OP/ED themes with clean (creditless)
-    video links. Every result here is a database-verified anime song - no guessing
-    from video titles needed. Pulls a random page each run so we don't keep hitting
-    the same static "newest in database" slice, which doesn't change often.
+    video links, restricted to anime from MIN_YEAR onward. Every result here is a
+    database-verified anime song - no guessing from video titles needed. Pulls a
+    random page each run so we don't keep hitting the same static slice.
     """
     page = random.randint(1, MAX_PAGE_ESTIMATE)
-    url = f"{ANIMETHEMES_API_BASE}/animetheme"
+    year_list = ",".join(str(y) for y in range(MIN_YEAR, CURRENT_YEAR + 1))
+    url = f"{ANIMETHEMES_API_BASE}/anime"
     params = {
-        "include": "anime,song.artists,animethemeentries.videos",
+        "include": "animethemes.song.artists,animethemes.animethemeentries.videos",
+        "filter[year]": year_list,
         "sort": "id",
         "page[size]": PAGE_SIZE,
         "page[number]": page,
@@ -28,38 +32,38 @@ def search_candidates():
     data = resp.json()
 
     candidates = []
-    for theme in data.get("animethemes", []):
-        anime = theme.get("anime") or {}
-        song = theme.get("song") or {}
-        artists = song.get("artists") or []
-        artist_name = artists[0]["name"] if artists else (anime.get("name", "Unknown Artist"))
-        song_title = song.get("title") or f"{theme.get('type', '')}{theme.get('sequence') or ''}"
+    for anime in data.get("anime", []):
+        for theme in (anime.get("animethemes") or []):
+            song = theme.get("song") or {}
+            artists = song.get("artists") or []
+            artist_name = artists[0]["name"] if artists else (anime.get("name", "Unknown Artist"))
+            song_title = song.get("title") or f"{theme.get('type', '')}{theme.get('sequence') or ''}"
 
-        # A theme can have many video variants (different quality/cuts) - take only the
-        # first clean match so the same song doesn't get posted repeatedly under different IDs
-        chosen_video = None
-        for entry in (theme.get("animethemeentries") or []):
-            for video in (entry.get("videos") or []):
-                if not video.get("nc"):  # skip versions with credits overlay; prefer clean
-                    continue
-                if video.get("lyrics"):  # skip versions with lyrics burned into the video
-                    continue
-                chosen_video = video
-                break
-            if chosen_video:
-                break
+            # A theme can have many video variants (different quality/cuts) - take only the
+            # first clean match so the same song doesn't get posted repeatedly under different IDs
+            chosen_video = None
+            for entry in (theme.get("animethemeentries") or []):
+                for video in (entry.get("videos") or []):
+                    if not video.get("nc"):  # skip versions with credits overlay; prefer clean
+                        continue
+                    if video.get("lyrics"):  # skip versions with lyrics burned into the video
+                        continue
+                    chosen_video = video
+                    break
+                if chosen_video:
+                    break
 
-        if not chosen_video:
-            continue
+            if not chosen_video:
+                continue
 
-        candidates.append({
-            "id": f"at{theme['id']}",  # keyed on the theme itself, not the video variant
-            "video_link": chosen_video["link"],
-            "anime_name": anime.get("name", "Unknown Anime"),
-            "title": song_title,
-            "artist": artist_name,
-            "theme_type": theme.get("type"),  # "OP" or "ED"
-        })
+            candidates.append({
+                "id": f"at{theme['id']}",  # keyed on the theme itself, not the video variant
+                "video_link": chosen_video["link"],
+                "anime_name": anime.get("name", "Unknown Anime"),
+                "title": song_title,
+                "artist": artist_name,
+                "theme_type": theme.get("type"),  # "OP" or "ED"
+            })
     return candidates
 
 
