@@ -1491,5 +1491,23 @@
     "title": "G.P.",
     "artist": "Great Pretender",
     "anime": "Great Pretender"
+  },
+  "at11936": {
+    "skipped": "duplicate_song"
+  },
+  "at11808": {
+    "title": "HIGHEST",
+    "artist": "OxT",
+    "anime": "Kage no Jitsuryokusha ni Naritakute!"
+  },
+  "at11851": {
+    "title": "Darling in the Night",
+    "artist": "Asami Seto",
+    "anime": "Kage no Jitsuryokusha ni Naritakute!"
+  },
+  "at11869": {
+    "title": "Darling in the Night",
+    "artist": "Inori Minase",
+    "anime": "Kage no Jitsuryokusha ni Naritakute!"
   }
 }
