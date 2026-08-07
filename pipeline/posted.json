@@ -2950,5 +2950,26 @@
     "title": "WIN",
     "artist": "The God of High School",
     "anime": "The God of High School"
+  },
+  "at12864": {
+    "title": "Sun Is Coming Up",
+    "artist": "Asaka",
+    "anime": "Yuru Camp\u25b3 Movie"
+  },
+  "at12869": {
+    "skipped": "duplicate_song"
+  },
+  "at12870": {
+    "skipped": "duplicate_song"
+  },
+  "at12882": {
+    "title": "Irodori",
+    "artist": "KanoeRana",
+    "anime": "Yoru no Kurage wa Oyogenai"
+  },
+  "at12883": {
+    "title": "1-nichi wa 25-jikan.",
+    "artist": "Anna Tsurushima",
+    "anime": "Yoru no Kurage wa Oyogenai"
   }
 }
