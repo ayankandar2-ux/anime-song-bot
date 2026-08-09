@@ -3451,5 +3451,23 @@
     "title": "Nemophila",
     "artist": "Ore dake Haireru Kakushi Dungeon",
     "anime": "Ore dake Haireru Kakushi Dungeon"
+  },
+  "at13365": {
+    "title": "Koibito Ijou, Suki Miman",
+    "artist": "=LOVE",
+    "anime": "Class no Daikirai na Joshi to Kekkon suru Koto ni Natta."
+  },
+  "at13366": {
+    "title": "Suki Kirai mo Oikoshite",
+    "artist": "Hinaki Yano",
+    "anime": "Class no Daikirai na Joshi to Kekkon suru Koto ni Natta."
+  },
+  "at13475": {
+    "skipped": "duplicate_song"
+  },
+  "at13481": {
+    "title": "Suki Kirai mo Oikoshite",
+    "artist": "Nene Hieda",
+    "anime": "Class no Daikirai na Joshi to Kekkon suru Koto ni Natta."
   }
 }
