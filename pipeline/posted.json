@@ -3489,5 +3489,23 @@
     "title": "Esoa",
     "artist": "Momosumomosu",
     "anime": "Maou Gakuin no Futekigousha II: Shijou Saikyou no Maou no Shiso, Tensei shite Shison-tachi no Gakkou e Kayou"
+  },
+  "at9927": {
+    "title": "Dear My Hero",
+    "artist": "Risa Taneda",
+    "anime": "Strike the Blood IV"
+  },
+  "at10068": {
+    "skipped": "duplicate_song"
+  },
+  "at9530": {
+    "title": "Yuuki no Tsubasa",
+    "artist": "Yoko Ishida",
+    "anime": "Strike Witches: Road to Berlin"
+  },
+  "at9531": {
+    "title": "Kimi no Tsubasa ni Akogarete",
+    "artist": "Saori Seto",
+    "anime": "Strike Witches: Road to Berlin"
   }
 }
