@@ -4483,5 +4483,23 @@
     "title": "'FA'NTASY to!",
     "artist": "Luce Twinkle Wink\u2606",
     "anime": "Fantasy Bishoujo Juniku Ojisan to"
+  },
+  "at10823": {
+    "title": "Mirai wa Kaze no You ni",
+    "artist": "Liella!",
+    "anime": "Love Live! Superstar!!"
+  },
+  "at10550": {
+    "skipped": "duplicate_song"
+  },
+  "at10552": {
+    "title": "Shion",
+    "artist": "Myuk",
+    "anime": "Night Head 2041"
+  },
+  "at10571": {
+    "title": "Eto Nyanran",
+    "artist": "Aina Suzuki",
+    "anime": "Etotama: Nyankyaku Banrai"
   }
 }
