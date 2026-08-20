@@ -4751,5 +4751,26 @@
     "title": "ALIVE",
     "artist": "ClariS",
     "anime": "Lycoris Recoil"
+  },
+  "at12363": {
+    "title": "Mirai=Teleport",
+    "artist": "Nenne",
+    "anime": "Lv1 Maou to One Room Yuusha"
+  },
+  "at12360": {
+    "skipped": "duplicate_song"
+  },
+  "at12361": {
+    "skipped": "duplicate_song"
+  },
+  "at12407": {
+    "title": "Fanfare",
+    "artist": "BRADIO",
+    "anime": "Jidou Hanbaiki ni Umarekawatta Ore wa Meikyuu wo Samayou"
+  },
+  "at12408": {
+    "title": "Itsumo no Soup",
+    "artist": "Peel the Apple",
+    "anime": "Jidou Hanbaiki ni Umarekawatta Ore wa Meikyuu wo Samayou"
   }
 }
