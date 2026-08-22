@@ -4936,5 +4936,20 @@
   },
   "at10846": {
     "skipped": "duplicate_song"
+  },
+  "at11500": {
+    "title": "Akane-gumi Katsudou Nisshi ~Tora-han~",
+    "artist": "Misaki Watada",
+    "anime": "Kunoichi Tsubaki no Mune no Uchi"
+  },
+  "at11501": {
+    "title": "Akane-gumi Katsudou Nisshi ~Tatsu-han~",
+    "artist": "Yuuki Takada",
+    "anime": "Kunoichi Tsubaki no Mune no Uchi"
+  },
+  "at11503": {
+    "title": "Akane-gumi Katsudou Nisshi ~Inoshishi-han~",
+    "artist": "Natsumi Kawaida",
+    "anime": "Kunoichi Tsubaki no Mune no Uchi"
   }
 }
