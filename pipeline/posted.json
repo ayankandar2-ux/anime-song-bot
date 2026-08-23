@@ -5001,5 +5001,23 @@
     "title": "Wonderful Carnival",
     "artist": "Masaaki Endou",
     "anime": "Fate/Grand Carnival"
+  },
+  "at10007": {
+    "title": "Ikouze\u2606Paradise",
+    "artist": "Miyu Tomita",
+    "anime": "Ishuzoku Reviewers"
+  },
+  "at10008": {
+    "title": "Hanabira Ondo",
+    "artist": "Miyu Tomita",
+    "anime": "Ishuzoku Reviewers"
+  },
+  "at10009": {
+    "skipped": "duplicate_song"
+  },
+  "at10010": {
+    "title": "Play the world",
+    "artist": "Rico Sasaki",
+    "anime": "Itai no wa Iya nano de Bougyoryoku ni Kyokufuri Shitai to Omoimasu."
   }
 }
