@@ -5593,5 +5593,23 @@
     "title": "Missing Promise",
     "artist": "Konomi Suzuki",
     "anime": "Higurashi no Naku Koro ni Sotsu"
+  },
+  "at9842": {
+    "title": "Awesome days!",
+    "artist": "World Witches Hasshin Shimasu!",
+    "anime": "World Witches Hasshin Shimasu!"
+  },
+  "at9843": {
+    "title": "Colorful Everyday",
+    "artist": "Saori Seto",
+    "anime": "World Witches Hasshin Shimasu!"
+  },
+  "at9844": {
+    "skipped": "duplicate_song"
+  },
+  "at9845": {
+    "title": "Colorful Everyday",
+    "artist": "Ayuru Ohashi",
+    "anime": "World Witches Hasshin Shimasu!"
   }
 }
